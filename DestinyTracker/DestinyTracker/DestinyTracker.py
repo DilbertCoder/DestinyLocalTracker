@@ -1,13 +1,17 @@
 # Base file for the project with the Main
+import json
 
 # Local Imports
-import DestinyApi.destinywebinterface
+import DestinyApi.basedestinyapi
 
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
 def main():
-    print("Hello World")
-    tempItem = DestinyApi.destinywebinterface.DestinyWebInterface()
-    print(tempItem.TestRequest())
-
-
+    localApi = DestinyApi.basedestinyapi.BaseDestinyApi()
+    
+    print(localApi.GetBungieApplicationList())
+    
+#--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
 if __name__ == "__main__":
     main()

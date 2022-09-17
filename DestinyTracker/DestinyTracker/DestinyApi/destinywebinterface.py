@@ -1,9 +1,14 @@
 # System imports
 import requests
+import json
+import string
+from urllib.parse import urljoin
 
-class DestinyWebInterface:
+class DestinyWebInterface(object):
     apiAuthenticationToken = None
-    destinyApiBaseUrl = "https://api.publicapis.org/entries"
+    destinyApiBaseUrl = "https://www.bungie.net/"
+    destinyApiBasePath = "Platform/"
+    apiXKeyheader = {'x-api-key' : ''}
 
     #--------------------------------------------------------------------------
     #--------------------------------------------------------------------------
@@ -17,9 +22,13 @@ class DestinyWebInterface:
 
     #--------------------------------------------------------------------------
     #--------------------------------------------------------------------------
-    def TestRequest(self):
-        testOutput = requests.get(url=self.destinyApiBaseUrl, verify=True)
-        return testOutput.json()
+    def GetRequestNoParameters(self, apiPath, apiKey) -> json:
+        apiHeader = {'x-api-key' : apiKey}
+        completeApiPath = self.destinyApiBasePath + apiPath
+        completeHttpUrl = urljoin(self.destinyApiBaseUrl, completeApiPath)
+        apiGetResult = requests.get(url=completeHttpUrl, headers=apiHeader)
+        return apiGetResult.json()
+
 
     
 

@@ -21,6 +21,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DestinyApi\basedestinyapi.py" />
     <Compile Include="DestinyApi\destinywebinterface.py" />
     <Compile Include="DestinyApi\__init__.py" />
     <Compile Include="destinytracker.py" />
