@@ -1,3 +1,4 @@
+import json
 
 #Local imports
 import DestinyApi.destinywebinterface
@@ -6,6 +7,10 @@ import DestinyApi.destinywebinterface
 # API Path String
 #--------------------------------------------------------------------------
 getBungieApplicationListApiStr = "App/FirstParty/"
+getSearchByDestinyName = "Destiny2/SearchDestinyPlayerByBungieName/-1/"
+getThemes = "GroupV2/GetAvailableThemes/"
+getContentType = "Content/GetContentType/300/"
+getDestinyManifest = "Destiny2/Manifest/"
 
 class BaseDestinyApi(object):
     #--------------------------------------------------------------------------
@@ -20,8 +25,11 @@ class BaseDestinyApi(object):
     #--------------------------------------------------------------------------
     # Call to App.GetBungieApplications
     #--------------------------------------------------------------------------
-    def GetBungieApplicationList(self):
-        apiResultJson = self.localWebInterface.GetRequestNoParameters(DestinyApi.basedestinyapi.getBungieApplicationListApiStr, "")
+    def GetBungieApplicationList(self) -> json:
+        #destinyNameJson = {"displayName": "DarthDilbert", "displayNameCode": 1996}
+        #apiResultJson = self.localWebInterface.PostRequestToApi(apiPath=getSearchByDestinyName, jsonData=destinyNameJson)
+        apiResultJson = self.localWebInterface.GetRequestNoParameters(apiPath=getContentType)
+        #apiResultJson = self.localWebInterface.GetRequestNoParameters(apiPath=getDestinyManifest)
         return apiResultJson
 
 

@@ -1,19 +1,17 @@
 # System imports
 import requests
 import json
-import string
 from urllib.parse import urljoin
 
 class DestinyWebInterface(object):
-    apiAuthenticationToken = None
-    destinyApiBaseUrl = "https://www.bungie.net/"
-    destinyApiBasePath = "Platform/"
-    apiXKeyheader = {'x-api-key' : ''}
-
     #--------------------------------------------------------------------------
     #--------------------------------------------------------------------------
     def __init__(self) -> None:
-        print("TODO any initial stuff")
+        self.apiAuthenticationToken = None
+        self.destinyApiBaseUrl = "https://www.bungie.net/"
+        self.destinyApiBasePath = "Platform/"
+        self.apiXKeyheader = {'x-api-key' : '18c9bc642c824e84a683e096fb560371'}
+
 
     #--------------------------------------------------------------------------
     #--------------------------------------------------------------------------
@@ -22,12 +20,20 @@ class DestinyWebInterface(object):
 
     #--------------------------------------------------------------------------
     #--------------------------------------------------------------------------
-    def GetRequestNoParameters(self, apiPath, apiKey) -> json:
-        apiHeader = {'x-api-key' : apiKey}
+    def GetRequestNoParameters(self, apiPath) -> json:
         completeApiPath = self.destinyApiBasePath + apiPath
         completeHttpUrl = urljoin(self.destinyApiBaseUrl, completeApiPath)
-        apiGetResult = requests.get(url=completeHttpUrl, headers=apiHeader)
+        apiGetResult = requests.get(url=completeHttpUrl, headers=self.apiXKeyheader)
         return apiGetResult.json()
+
+    #--------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
+    def PostRequestToApi(self, apiPath, jsonData: json) -> json:
+        completeApiPath = self.destinyApiBasePath + apiPath
+        completeHttpUrl = urljoin(self.destinyApiBaseUrl, completeApiPath)
+        apiPostResult = requests.post(url=completeHttpUrl, headers=self.apiXKeyheader, data=json.dumps(jsonData))
+        return apiPostResult.json()
+
 
 
     
