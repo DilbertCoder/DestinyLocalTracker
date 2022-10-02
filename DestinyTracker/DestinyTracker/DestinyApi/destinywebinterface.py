@@ -8,10 +8,14 @@ class DestinyWebInterface(object):
     #--------------------------------------------------------------------------
     def __init__(self) -> None:
         self.apiAuthenticationToken = None
-        self.destinyApiBaseUrl = "https://www.bungie.net/"
-        self.destinyApiBasePath = "Platform/"
+        self.destinyApiBaseUrl = "https://www.bungie.net"
+        self.destinyApiBasePath = "/Platform/"
         self.apiXKeyheader = {'x-api-key' : '18c9bc642c824e84a683e096fb560371'}
 
+    #--------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
+    def GetBaseApiUrl(self):
+        return self.destinyApiBaseUrl
 
     #--------------------------------------------------------------------------
     #--------------------------------------------------------------------------
@@ -24,6 +28,14 @@ class DestinyWebInterface(object):
         completeApiPath = self.destinyApiBasePath + apiPath
         completeHttpUrl = urljoin(self.destinyApiBaseUrl, completeApiPath)
         apiGetResult = requests.get(url=completeHttpUrl, headers=self.apiXKeyheader)
+        return apiGetResult.json()
+
+    #--------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
+    def GetRequestWithParameters(self, apiPath, apiParams) -> json:
+        completeApiPath = self.destinyApiBasePath + apiPath
+        completeHttpUrl = urljoin(self.destinyApiBaseUrl, completeApiPath)
+        apiGetResult = requests.get(url=completeHttpUrl, headers=self.apiXKeyheader, params=apiParams)
         return apiGetResult.json()
 
     #--------------------------------------------------------------------------
