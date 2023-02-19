@@ -76,8 +76,18 @@ class BaseDestinyApi(object):
     #--------------------------------------------------------------------------
     def GetPlayerProfile(self, membershiptype: int, membershipId: int, componetItems: str):
         getProfileApiPath = f"Destiny2/{membershiptype}/Profile/{membershipId}/"
-        componentParams = {'components': '200'}
+        componentParams = {'components': componetItems}
         return self.localWebInterface.GetRequestWithParameters(apiPath=getProfileApiPath, apiParams=componentParams)
+
+    #--------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
+    def GetHistoricalStats(self, membershiptype: int, membershipId: int, characterId: int):
+        getHistroicalStateApiPath = f"Destiny2/{membershiptype}/Account/{membershipId}/Character/{characterId}/Stats/"
+
+    #--------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
+    def GetActivityHistory(self, membershiptype: int, membershipId: int, characterId: int):
+        getActivityHistoryApiPath = f"Destiny2/{membershiptype}/Account/{membershipId}/Character/{characterId}/Stats/Activities/"
 
     #--------------------------------------------------------------------------
     #--------------------------------------------------------------------------

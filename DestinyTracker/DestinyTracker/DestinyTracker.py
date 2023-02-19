@@ -16,7 +16,7 @@ def main():
     localApi.UpdateManifestContent()
 
     #load the manifest data files
-    localDataModel.InitializeFromJsonFiles()
+    #localDataModel.InitializeFromJsonFiles()
         
 
 
@@ -31,11 +31,11 @@ def main():
     #        json.dump(destinyItemInventory['2221264583'], testJsonFile, indent=4)
     #        json.dump(destinyItemInventory['1937552980'], testJsonFile, indent=4)
             
-    #with open("playerData.txt", "w") as testOutputFile:
-    #    json.dump(localApi.SearchForPlayer("DarthDilbert", 1996), testOutputFile, indent=4)
+    with open("playerData.txt", "w") as testOutputFile:
+        json.dump(localApi.SearchForPlayer("DarthDilbert", 1996), testOutputFile, indent=4)
 
-    #with open("playerProfile.txt", "w") as profileOutputFile:
-    #    json.dump(localApi.GetPlayerProfile(membershiptype=3, membershipId=4611686018485481455, componetItems="Characters"), profileOutputFile, indent=4)
+    with open("playerProfile.txt", "w") as profileOutputFile:
+        json.dump(localApi.GetPlayerProfile(membershiptype=3, membershipId=4611686018485481455, componetItems="Characters"), profileOutputFile, indent=4)
 
     #with open("clanInformation.txt", "w") as profileOutputFile:
     #    json.dump(localApi.SearchForClanByName(clanName="Touched by a SIVA"), profileOutputFile, indent=4)
