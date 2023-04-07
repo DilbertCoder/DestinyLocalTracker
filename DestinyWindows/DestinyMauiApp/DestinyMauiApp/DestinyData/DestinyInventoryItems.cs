@@ -13,7 +13,7 @@ namespace DestinyMauiApp.DestinyData
         {
             public CommonDataClasses.DisplayProperty displayProperty;
             public List<string> tooltipNotifications;
-            public BackgroundColor backgroundColor;
+            public CommonDataClasses.BackgroundColor backgroundColor;
             public string screenshot;
             public string itemTypeDisplayName;
             public string flavorText;
@@ -24,23 +24,11 @@ namespace DestinyMauiApp.DestinyData
             public InventoryItem()
             {
                 displayProperty= new CommonDataClasses.DisplayProperty();
-                backgroundColor= new BackgroundColor();
+                backgroundColor= new CommonDataClasses.BackgroundColor();
             }
         }
 
-        private class BackgroundColor
-        {
-            public int colorHash;
-            public int red;
-            public int green;
-            public int blue;
-            public int alpha;
-        }
-
-        private class Action
-        {
-            public string verbName;
-        }
+        private Dictionary<string, InventoryItem> m_InventoryItems = new();
 
         public DestinyInventoryItems()
         {
@@ -57,6 +45,7 @@ namespace DestinyMauiApp.DestinyData
             bool foundTheEnd = false;
             int startObjectCount = 0;
             string objectKey = "bad";
+            string startObjectStr = "invalid";
             InventoryItem tempItem = null;
             while (localJsonReader.Read())
             {
@@ -66,7 +55,13 @@ namespace DestinyMauiApp.DestinyData
                     {
                         break;
                     }
-                    
+
+                    if (tempItem != null)
+                    {
+                        m_InventoryItems.Add(objectKey, tempItem);
+                    }
+
+                    startObjectCount = 0;
                     foundTheEnd = true;
                     continue;
                 }
@@ -76,95 +71,69 @@ namespace DestinyMauiApp.DestinyData
                 if (localJsonReader.TokenType == JsonTokenType.StartObject)
                 {
                     startObjectCount++;
-                    continue;
+
+                    localJsonReader.Read();
+                    startObjectStr = localJsonReader.GetString();
+                }
+                else if (localJsonReader.TokenType == JsonTokenType.PropertyName)
+                {
+                    startObjectStr = localJsonReader.GetString();
                 }
 
-                if(startObjectCount == 1) 
+                // The first object after a start is the key
+                if (startObjectCount == 1) 
                 {
-                    objectKey = localJsonReader.GetString();
+                    objectKey = startObjectStr;
                     tempItem = new InventoryItem();
                 }
-                else if (startObjectCount == 2)
+                else if (startObjectStr == "displayProperties")
                 {
-                    // Second item is the display properties object
-                    while (localJsonReader.Read())
-                    {
-                        if (localJsonReader.TokenType == JsonTokenType.EndObject)
-                        {
-                            // Done here
-                            startObjectCount++;
-                            break;
-                        }
-                        else if (localJsonReader.TokenType == JsonTokenType.StartObject)
-                        {
-                            continue;
-                        }
-
-                        string keyValueStr = localJsonReader.GetString();
-                        if (keyValueStr == "description")
-                        {
-                            localJsonReader.Read();
-                            tempItem.displayProperty.description = localJsonReader.GetString();
-                        }
-                        else if (keyValueStr == "name")
-                        {
-                            localJsonReader.Read();
-                            tempItem.displayProperty.name = localJsonReader.GetString();
-                        }
-                        else if (keyValueStr == "hasIcon")
-                        {
-                            localJsonReader.Read();
-                            tempItem.displayProperty.hasIcon = localJsonReader.GetBoolean();
-                        }
-                        else if (keyValueStr == "icon")
-                        {
-                            localJsonReader.Read();
-                            tempItem.displayProperty.icon = localJsonReader.GetString();
-                        }
+                    if (!CommonDataClassHelperMethods.LoadDisplayProperties(ref localJsonReader, ref tempItem.displayProperty))
+                    { 
+                        return false;
                     }
                 }
-                else if (startObjectCount == 3)
+                else if (startObjectStr == "backgroundColor")
                 {
-                    while (localJsonReader.Read())
+                    if(!CommonDataClassHelperMethods.LoadBackgroundColor(ref localJsonReader, ref tempItem.backgroundColor))
                     {
-                        if (localJsonReader.TokenType == JsonTokenType.EndObject)
-                        {
-                            // Done here
-                            startObjectCount++;
-                            break;
-                        }
-                        else if (localJsonReader.TokenType == JsonTokenType.StartObject)
-                        {
-                            continue;
-                        }
-
-                        string keyValueStr = localJsonReader.GetString();
-                        if (keyValueStr == "colorHash")
-                        {
-                            localJsonReader.Read();
-                            tempItem.backgroundColor.colorHash = localJsonReader.GetInt32();
-                        }
-                        else if (keyValueStr == "red")
-                        {
-                            localJsonReader.Read();
-                            tempItem.backgroundColor.red = localJsonReader.GetInt32();
-                        }
-                        else if (keyValueStr == "green")
-                        {
-                            localJsonReader.Read();
-                            tempItem.backgroundColor.green = localJsonReader.GetInt32();
-                        }
-                        else if (keyValueStr == "blue")
-                        {
-                            localJsonReader.Read();
-                            tempItem.backgroundColor.blue = localJsonReader.GetInt32();
-                        }
-                        else if (keyValueStr == "alpha")
-                        {
-                            localJsonReader.Read();
-                            tempItem.backgroundColor.alpha = localJsonReader.GetInt32();
-                        }
+                        return false;
                     }
+                }
+                else if(startObjectStr == "screenshot")
+                {
+                    localJsonReader.Read();
+                    tempItem.screenshot = localJsonReader.GetString();
+                }
+                else if(startObjectStr == "itemTypeDisplayName")
+                {
+                    localJsonReader.Read();
+                    tempItem.itemTypeDisplayName = localJsonReader.GetString();
+                }
+                else if(startObjectStr == "flavorText")
+                {
+                    localJsonReader.Read();
+                    tempItem.flavorText = localJsonReader.GetString();
+                }
+                else if(startObjectStr == "uiItemDisplayStyle")
+                {
+                    localJsonReader.Read();
+                    tempItem.uiItemDisplayStyle = localJsonReader.GetString();
+                }
+                else if(startObjectStr == "itemTypeAndTierDisplayName")
+                {
+                    localJsonReader.Read();
+                    tempItem.itemTypeAndTierDisplayName = localJsonReader.GetString();
+                }
+                else if(startObjectStr == "displaySource")
+                {
+                    localJsonReader.Read();
+                    tempItem.displaySource = localJsonReader.GetString();
+                }
+                else if(startObjectStr == "action")
+                {
+                    localJsonReader.Read();
+                    // TODO
                 }
 
             }

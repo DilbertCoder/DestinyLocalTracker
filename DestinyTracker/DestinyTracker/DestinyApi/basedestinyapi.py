@@ -33,7 +33,7 @@ class BaseDestinyApi(object):
             with open(manifestFile, encoding="utf_8", mode="r") as currentManifestFile:
                 manifestObj = json.load(currentManifestFile)
                 self.currentManifestVersion = manifestObj['version']
-
+            self.UpdateManifestContent()
 
     #--------------------------------------------------------------------------
     #--------------------------------------------------------------------------

@@ -51,6 +51,7 @@ namespace DestinyMauiApp.DestinyData
 
             int startObjectCount = 0;
             string objectKey = "bad";
+            string startObjectStr = "invalid";
             Achievement tempAchivement = null;
             bool foundTheEnd = false;
             while (localJsonReader.Read())
@@ -66,7 +67,7 @@ namespace DestinyMauiApp.DestinyData
                         m_Achivements.Add(objectKey, tempAchivement);
                     }
 
-                    startObjectCount = 1;
+                    startObjectCount = 0;
                     foundTheEnd = true;
                     continue;
                 }
@@ -76,80 +77,55 @@ namespace DestinyMauiApp.DestinyData
                 if (localJsonReader.TokenType == JsonTokenType.StartObject)
                 {
                     startObjectCount++;
-                    continue;
+                    
+                    localJsonReader.Read();
+                    startObjectStr = localJsonReader.GetString();
+                }
+                else if(localJsonReader.TokenType == JsonTokenType.PropertyName)
+                {
+                    startObjectStr = localJsonReader.GetString();
                 }
 
                 // First Item is the Key for this Object
                 if(startObjectCount == 1)
                 {
-                    objectKey = localJsonReader.GetString();
+                    objectKey = startObjectStr;
                     tempAchivement = new();
                 }
-                else if(startObjectCount == 2)
+                else if(startObjectStr == "displayProperties")
                 {
-                    // Second item is the display properties object
-                    while(localJsonReader.Read())
+                    if(!CommonDataClassHelperMethods.LoadDisplayProperties(ref localJsonReader, ref tempAchivement.displayProperty))
                     {
-                        if(localJsonReader.TokenType == JsonTokenType.EndObject)
-                        {
-                            // Done here
-                            startObjectCount++;
-                            break;
-                        }
-                        else if (localJsonReader.TokenType == JsonTokenType.StartObject)
-                        {
-                            continue;
-                        }
-
-                        string keyValueStr = localJsonReader.GetString();
-                        if(keyValueStr == "description")
-                        {
-                            localJsonReader.Read();
-                            tempAchivement.displayProperty.description = localJsonReader.GetString(); 
-                        }
-                        else if( keyValueStr == "name")
-                        {
-                            localJsonReader.Read();
-                            tempAchivement.displayProperty.name = localJsonReader.GetString();
-                        }
-                        else if(keyValueStr == "hasIcon")
-                        {
-                            localJsonReader.Read();
-                            tempAchivement.displayProperty.hasIcon = localJsonReader.GetBoolean();
-                        }
-                        else if(keyValueStr == "icon")
-                        {
-                            localJsonReader.Read();
-                            tempAchivement.displayProperty.icon = localJsonReader.GetString();
-                        }
+                        //TODO: Failed to load display properties. 
+                        return false;
                     }
                 }
-                else if (localJsonReader.GetString() == "acccumulatorThreshold")
+                else if (startObjectStr == "acccumulatorThreshold")
                 {
                     localJsonReader.Read();
                     tempAchivement.acccumulatorThreshold = localJsonReader.GetInt32();
                 }
-                else if (localJsonReader.GetString() == "platformIndex")
+                else if (startObjectStr == "platformIndex")
                 {
                     localJsonReader.Read();
                     tempAchivement.platformIndex = localJsonReader.GetInt32();
                 }
-                else if(localJsonReader.GetString() == "hash")
+                else if(startObjectStr == "hash")
                 {
                     localJsonReader.Read();
                     tempAchivement.hash = localJsonReader.GetInt64();
                 }
-                else if(localJsonReader.GetString() == "index")
+                else if(startObjectStr == "index")
                 {
                     localJsonReader.Read();
                     tempAchivement.index = localJsonReader.GetInt32();
                 }
-                else if(localJsonReader.GetString() == "redacted")
+                else if(startObjectStr == "redacted")
                 {
                     localJsonReader.Read();
                     tempAchivement.redacted = localJsonReader.GetBoolean();
                 }
-                else if(localJsonReader.GetString() == "blacklisted")
+                else if(startObjectStr == "blacklisted")
                 {
                     localJsonReader.Read();
                     tempAchivement.blacklisted = localJsonReader.GetBoolean();
