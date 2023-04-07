@@ -17,10 +17,7 @@ def main():
 
     #load the manifest data files
     #localDataModel.InitializeFromJsonFiles()
-        
-
-
-
+    
     #destinyClassObj = DestinyApi.Models.DestinyClassModel.DestinyClassModel()
 
     #This file as all the items in it along with weapons. You can take and item and cross refence the bucketTypeHash value to figure out if the item is a weapon. 
